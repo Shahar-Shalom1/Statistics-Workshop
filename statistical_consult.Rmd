@@ -1,0 +1,38 @@
+
+read libreries:
+```{r}
+library(readxl)
+library(dplyr)
+library(rio)
+```
+read the data file:
+```{r}
+dir <- "C:/Users/edena/Desktop/לימודים/סטטיסטיקה תואר שני/שנה ב/Statistical_Consulting"
+data_list <- import_list(paste0(dir,"/atopic_comorbidities_first_second_year_1.11.22.xlsx"))
+
+list2env(data_list, .GlobalEnv)
+
+`TheInfluenceOfEarlyA_DATA_2022-` <- `TheInfluenceOfEarlyA_DATA_2022-` %>% mutate(DOB = as.Date(DOB)) 
+
+head(`TheInfluenceOfEarlyA_DATA_2022-`)
+```
+Data arrangement:
+```{r}
+data <- `TheInfluenceOfEarlyA_DATA_2022-` %>% filter(is.na(lost_of_followup))
+data$family_Atopic_diseases_sum <- rowSums(data[,15:50])
+data$mother_Atopic_diseases_sum <- rowSums(data[,15:20])
+data$father_Atopic_diseases_sum <- rowSums(data[,21:26])
+data$sibling_Atopic_diseases_sum <- rowSums(data[,27:50])
+
+data <- data %>% mutate(family_Atopic_diseases = ifelse(family_Atopic_diseases_sum >0,1,0), mother_Atopic_diseases = ifelse(mother_Atopic_diseases_sum>0,1,0), father_Atopic_diseases = ifelse(father_Atopic_diseases_sum > 0, 1,0), sibling_Atopic_diseases = ifelse(sibling_Atopic_diseases_sum > 0 ,1, 0)) %>% select(-c(family_Atopic_diseases_sum, mother_Atopic_diseases_sum, father_Atopic_diseases_sum, sibling_Atopic_diseases_sum))
+
+
+Complete_follow_up <- data %>% filter(month_survey_complete == 2)
+```
+summary:
+```{r}
+summary(data)
+
+data[which(data$mother_year_birth> 2000),]
+```
+
