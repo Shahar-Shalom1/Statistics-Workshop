@@ -4,8 +4,6 @@ read libreries:
 library(readxl)
 library(dplyr)
 library(rio)
-
-
 ```
 read the data file:
 ```{r}
