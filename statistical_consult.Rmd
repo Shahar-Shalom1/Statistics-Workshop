@@ -1,38 +1,61 @@
 
 read libreries:
-```{r}
+```{r, echo=F, message=F}
 library(readxl)
 library(dplyr)
 library(rio)
 ```
-read the data file:
+
+
+read the df file:
 ```{r}
-dir <- "C:/Users/edena/Desktop/לימודים/סטטיסטיקה תואר שני/שנה ב/Statistical_Consulting"
-data_list <- import_list(paste0(dir,"/atopic_comorbidities_first_second_year_1.11.22.xlsx"))
+dir <- "C://Users//Shahar//Documents//GitHub//Statistics-Workshop//atopic_comorbidities_first_second_year_1.11.22.xlsx"
+df <- read_excel(dir, sheet = 1)
+df <- df %>% mutate(DOB = as.Date(DOB)) 
 
-list2env(data_list, .GlobalEnv)
+## df arrangement:
+# not relevant columns :
+not_relevant <- c(allergist_followup, last_spt, epipen, mistake_exposure, reaction_type24, diagnosis_by)
+df <- df[-which(colnames(df) %in% not_relevant)]
 
-`TheInfluenceOfEarlyA_DATA_2022-` <- `TheInfluenceOfEarlyA_DATA_2022-` %>% mutate(DOB = as.Date(DOB)) 
+# Filter only participants that complete the survey
+df <- df %>% filter(month_survey_complete == 2)
 
-head(`TheInfluenceOfEarlyA_DATA_2022-`)
+df <- df %>% filter(is.na(lost_of_followup))
+df$family_Atopic_diseases_sum <- rowSums(df[,15:50])
+df$mother_Atopic_diseases_sum <- rowSums(df[,15:20])
+df$father_Atopic_diseases_sum <- rowSums(df[,21:26])
+df$sibling_Atopic_diseases_sum <- rowSums(df[,27:50])
+
+#מוסיף את העמודות החדשות 
+df <- df %>% mutate(family_Atopic_diseases = ifelse(family_Atopic_diseases_sum >0,1,0), mother_Atopic_diseases = ifelse(mother_Atopic_diseases_sum>0,1,0), father_Atopic_diseases = ifelse(father_Atopic_diseases_sum > 0, 1,0), sibling_Atopic_diseases = ifelse(sibling_Atopic_diseases_sum > 0 ,1, 0)) %>% select(-c(family_Atopic_diseases_sum, mother_Atopic_diseases_sum, father_Atopic_diseases_sum, sibling_Atopic_diseases_sum))
 ```
-Data arrangement:
+
+
+Summary:
 ```{r}
-data <- `TheInfluenceOfEarlyA_DATA_2022-` %>% filter(is.na(lost_of_followup))
-data$family_Atopic_diseases_sum <- rowSums(data[,15:50])
-data$mother_Atopic_diseases_sum <- rowSums(data[,15:20])
-data$father_Atopic_diseases_sum <- rowSums(data[,21:26])
-data$sibling_Atopic_diseases_sum <- rowSums(data[,27:50])
+summary(df)
+glimpse(df1)
+# attach(df)
 
-data <- data %>% mutate(family_Atopic_diseases = ifelse(family_Atopic_diseases_sum >0,1,0), mother_Atopic_diseases = ifelse(mother_Atopic_diseases_sum>0,1,0), father_Atopic_diseases = ifelse(father_Atopic_diseases_sum > 0, 1,0), sibling_Atopic_diseases = ifelse(sibling_Atopic_diseases_sum > 0 ,1, 0)) %>% select(-c(family_Atopic_diseases_sum, mother_Atopic_diseases_sum, father_Atopic_diseases_sum, sibling_Atopic_diseases_sum))
+# מישהי שילדה בגיל 12
+df[which(df$mother_year_birth> 2000),]
 
 
-Complete_follow_up <- data %>% filter(month_survey_complete == 2)
-```
-summary:
-```{r}
-summary(data)
+# Notes:
+# 1. SES - 1 NA
+# 2. lost_of_followup  - can be ignored 
+# 3. mother_education  - lots of NA 
+# 4. preganancy_number - 4NA 
+# 5. type_of_pregnancy - 3NA 
+# 6. type of allergy - lots of NA 
+# 7.  1_month_inhalation   1_month_AD - lots of NA 
 
-data[which(data$mother_year_birth> 2000),]
+
+charcters_str <- c('record_id', 'SES', 'DOB', 'mother_year_birth',  '12_months_type_food' , 'reaction_type24')
+df1 <- df[,-which(colnames(df) %in% charcters_str)]
+
+boxplot(x = as.list(df1))
+
 ```
 
