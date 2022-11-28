@@ -85,7 +85,18 @@ table(`type of allergy`) # number of allergy
 table(inhalation_24_month)
 table(inhalation_24_month)
 
-
+#type of food:
+table(Egg)
+table(Peanuts)
+table(Almonds)
+table(`Tree nuts`)
+table(Milk)
+table(Soy)
+table(Sesame)
+table(Fish)
+table(`Other food`)
+table(HRAD_first_year)
+table(AD_first_year)table()
 
 # Show the distribution of some variables
 hist(mother_year_birth)
@@ -96,7 +107,16 @@ hist(SES) #socio-economic status
 colnames(df)
 
 ```
-
+# Frequency table for each column
+```{r}
+tablelist <- mapply(table, df)
+tablelist
+```
+# How many NA are in each column
+```{r}
+NA_count <- as.data.frame(t(df %>% summarise_all(funs(sum(is.na(.)))))) %>% dplyr::rename("the NA number" = 1)
+NA_count
+```
 # Run some logistic regression on some variables:
 ```{r}
 # # split the data into train and test 
