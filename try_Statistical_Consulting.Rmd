@@ -11,7 +11,8 @@ options(scipen=5, digits = 5)
 
 # Read the df file:
 ```{r}
-dir <- "C://Users//edena//Documents//GitHub//Statistics-Workshop//atopic_comorbidities_first_second_year_1.11.22.xlsx"
+dir <- "C://Users//Shahar//Documents//GitHub//Statistics-Workshop//atopic_comorbidities_first_second_year_1.11.22.xlsx"
+# dir <- "C://Users//edena//Documents//GitHub//Statistics-Workshop//atopic_comorbidities_first_second_year_1.11.22.xlsx"
 df <- read_excel(dir, sheet = 1)
 df <- df %>% mutate(DOB = as.Date(DOB)) 
 
@@ -38,12 +39,12 @@ df <- df %>% mutate(family_Atopic_diseases = ifelse(family_Atopic_diseases_sum >
 
 # Deling with strange data:  
 ```{r}
-summary(df)
-glimpse(df)
+# summary(df)
+# glimpse(df)
 # attach(df)
 
 # מישהי שילדה בגיל 12
-df[which(df$mother_year_birth> 2000),] # to take off ?? 
+# df[which(df$mother_year_birth> 2000),] # to take off ?? 
 
 # Change the binary variables to 0/1
 df$gender[df$gender == 2] <- 0
@@ -56,14 +57,14 @@ df$ABX_treatment_24_months[df$ABX_treatment_24_months == 2] <- 0
 df$hospitalization_24_months[df$hospitalization_24_months == 2] <- 0
 df$chronic_disease_24[df$chronic_disease_24 == 2] <- 0
 
-df$`12_month_number_of_inhalations`[is.na(df$`12_month_number_of_inhalations`)] <- 0
-df$`12_month_FA_type_allergy`[is.na(df$`12_month_FA_type_allergy`)] <- 0
-df$number_of_ABX_first_year[is.na(df$number_of_ABX_first_year)] <- 0
-df$number_inhalation[is.na(df$number_inhalation)] <- 0
-df$prevention_therapy[is.na(df$prevention_therapy)] <- 0
-df$number_of_ABX_first_year[is.na(df$number_of_ABX_first_year)] <- 0
-df$number_steroid_treat[is.na(df$number_steroid_treat)] <- 0
-df$number_ABX_treatment_24_months[is.na(df$number_ABX_treatment_24_months)] <- 0
+# df$`12_month_number_of_inhalations`[is.na(df$`12_month_number_of_inhalations`)] <- 0
+# df$`12_month_FA_type_allergy`[is.na(df$`12_month_FA_type_allergy`)] <- 0
+# df$number_of_ABX_first_year[is.na(df$number_of_ABX_first_year)] <- 0
+# df$number_inhalation[is.na(df$number_inhalation)] <- 0
+# df$prevention_therapy[is.na(df$prevention_therapy)] <- 0
+# df$number_of_ABX_first_year[is.na(df$number_of_ABX_first_year)] <- 0
+# df$number_steroid_treat[is.na(df$number_steroid_treat)] <- 0
+# df$number_ABX_treatment_24_months[is.na(df$number_ABX_treatment_24_months)] <- 0
 ```
 
 
@@ -85,16 +86,11 @@ table(`type of allergy`) # number of allergy
 table(inhalation_24_month)
 table(inhalation_24_month)
 
-
-
 # Show the distribution of some variables
 hist(mother_year_birth)
-
-
 hist(SES) #socio-economic status
 
 colnames(df)
-
 ```
 
 # Run some logistic regression on some variables:
@@ -113,13 +109,10 @@ intresting_col <- df %>% select(SES, `Jew/Arab`, gender, `Study group (MARCH 202
 cor_df <- as.data.frame(cor(as.matrix.noquote(intresting_col), use = "pairwise.complete.obs"))
 
 # model of inhalation requirement with the relevant fields 
-mdl <- glm(`type of allergy`~ ., data = intresting_col)
-summary(mdl)
+# mdl <- glm(`type of allergy`~ ., data = intresting_col)
+# summary(mdl)
 ```
 
-```{r}
-cor(intresting_col, use="complete.obs")
-```
 
 
 ```{r}
